@@ -1,0 +1,45 @@
+import discord
+import asyncio
+
+# Insira o token do seu bot aqui
+TOKEN = 'MTEzMzA2MjQ5OTEwOTk3ODIyMw.GZ0gnA.upAwvxzYj70PDWi9tJJD5LBF85QceGPBzI5AIA'
+
+# ID do canal em que deseja enviar a mensagem
+canal_id = 1133553397128245301
+
+# ID do cargo que você deseja mencionar
+cargo_id = 123456789012345678
+
+# Defina as intents que você precisa
+intents = discord.Intents.default()
+intents.messages = True
+
+# Crie o cliente do bot com as intents habilitadas
+client = discord.Client(intents=intents)
+
+# Função para enviar a mensagem personalizada
+async def enviar_mensagem_personalizada():
+    canal = client.get_channel(canal_id)
+    if canal is not None:
+        mensagem = f"<@&{1133554865470189589}> Deem uma olhada no nome, por favor. Certifiquem-se de que não há chats parados, tanto snoozeds que reabriram quanto chats para snoozar ou pingar o cliente"
+        await canal.send(mensagem)
+
+# Evento de inicialização do bot
+@client.event
+async def on_ready():
+    print(f'Bot conectado como {client.user}')
+
+    # Chama a função para enviar a mensagem inicial
+    await enviar_mensagem_personalizada()
+
+    # Inicia o loop assíncrono para enviar a mensagem periodicamente
+    asyncio.create_task(enviar_mensagem_periodicamente())
+
+# Crie um loop assíncrono para enviar a mensagem periodicamente
+async def enviar_mensagem_periodicamente():
+    while True:
+        await enviar_mensagem_personalizada()
+        await asyncio.sleep(5)  # Aguarda 5 segundos antes de enviar a próxima mensagem
+
+# Inicie o bot
+client.run(TOKEN)
